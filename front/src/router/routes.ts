@@ -1,18 +1,18 @@
 import type { RouteRecordRaw } from 'vue-router';
-
+import LayoutMain from '../layouts/MainLayout.vue';
+import Home from 'pages/IndexPage.vue';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
-  },
-  {
-    path: '/demandas',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
+    component: LayoutMain,
+    children: [
+      {
+        path: '',
+        component: Home,
+      },
+    ],
   },
 
-  
   // Always leave this as last one,
   // but you can also remove it
   {
