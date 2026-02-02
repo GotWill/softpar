@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router';
 import LayoutMain from '../layouts/MainLayout.vue';
-import Home from 'pages/IndexPage.vue';
+import Home from 'pages/home/IndexPage.vue';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
