@@ -142,7 +142,7 @@ const columns = [
   { id: 3, name: 'phone', label: 'Telefone', field: 'phone', align: 'left' as const },
   { id: 4, name: 'observation', label: 'Observação', field: 'observation', align: 'left' as const },
   { id: 5, name: 'notifications', label: 'Notificações', field: 'id', align: 'center' as const },
-  { id: 7, name: 'actions', label: 'Ações', field: 'actions', align: 'right' as const }
+  { id: 6, name: 'actions', label: 'Ações', field: 'actions', align: 'right' as const }
 ]
 
 </script>

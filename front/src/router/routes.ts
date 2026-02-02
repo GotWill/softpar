@@ -1,6 +1,8 @@
 import type { RouteRecordRaw } from 'vue-router';
 import LayoutMain from '../layouts/MainLayout.vue';
-import Home from 'pages/home/IndexPage.vue';
+import Home from 'src/pages/home/indexPage.vue';
+import Demands from 'src/pages/demands/demandasPage.vue';
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -9,6 +11,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         component: Home,
+      },
+      {
+        path: '/demandas',
+        component: Demands,
       },
     ],
   },
