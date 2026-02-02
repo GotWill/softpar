@@ -89,6 +89,7 @@ export default defineConfig((/* ctx */) => {
       extras: [
         'fontawesome-v6'
       ],
+      lang: 'pt-BR',
 
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
