@@ -1,7 +1,8 @@
 import type { RouteRecordRaw } from 'vue-router';
 import LayoutMain from '../layouts/MainLayout.vue';
-import Home from 'src/pages/home/indexPage.vue';
-import Demands from 'src/pages/demands/demandasPage.vue';
+import Home from 'pages/home/indexPage.vue';
+import Taks from 'pages/tasks/tasksPage.vue';
+import Reports from 'pages/reports/reportsPage.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -14,7 +15,11 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: '/demandas',
-        component: Demands,
+        component: Taks,
+      },
+      {
+        path: '/relatorios',
+        component: Reports,
       },
     ],
   },
