@@ -40,7 +40,7 @@
 
         <template v-slot:body-cell-notifications="props">
           <q-td :props="props">
-            <div class="flex justify-center gap-2">
+            <div class="flex justify-start gap-2">
 
               <q-badge :color="props.row.warningEmail ? 'blue-1' : 'grey-2'"
                 :text-color="props.row.warningEmail ? 'blue-9' : 'grey-5'" class="q-pa-xs px-2 rounded-md text-base">
@@ -140,9 +140,8 @@ const columns = [
   { id: 1, name: 'name', label: 'Nome', field: 'name', align: 'left' as const },
   { id: 2, name: 'email', label: 'E-mail', field: 'email', align: 'left' as const },
   { id: 3, name: 'phone', label: 'Telefone', field: 'phone', align: 'left' as const },
-  { id: 4, name: 'observation', label: 'Observação', field: 'observation', align: 'left' as const },
-  { id: 5, name: 'notifications', label: 'Notificações', field: 'id', align: 'center' as const },
-  { id: 6, name: 'actions', label: 'Ações', field: 'actions', align: 'right' as const }
+  { id: 4, name: 'notifications', label: 'Notificações', field: 'id', align: 'left' as const },
+  { id: 5, name: 'actions', label: 'Ações', field: 'actions', align: 'right' as const }
 ]
 
 </script>
