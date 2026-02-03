@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Demand extends Model
 {
+
+    public function client()
+    {
+        // Uma task pertence a um cliente
+        return $this->belongsTo(Client::class, 'client_id');
+    }
     /**
      * The attributes that are mass assignable.
      *

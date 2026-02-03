@@ -14,8 +14,8 @@ class ClientController extends Controller
      */
     public function index()
     {
-         $user = Client::where('is_deleted', false)->get()->values();
-         return response()->json($user->toResourceCollection());
+        $user = Client::where('is_deleted', false)->get()->values();
+        return response()->json($user->toResourceCollection());
     }
 
     public function store(StoreCLientRequest $request)
