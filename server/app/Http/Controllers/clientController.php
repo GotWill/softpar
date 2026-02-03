@@ -14,7 +14,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-         $user = Client::all();
+         $user = Client::where('is_deleted', false)->get()->values();
          return response()->json($user->toResourceCollection());
     }
 
@@ -46,13 +46,11 @@ class ClientController extends Controller
     public function destroy(string $id)
     {
         try {
-           $isRemoved = Client::destroy($id);
-
-           if(!$isRemoved){
-            throw new Exception();
-           }
-        } catch (\Exception $th) {
-            return response()->json(['message' => 'Error delete user to database.'], 400);
+            $client = Client::findOrFail($id);
+            $client->is_deleted = true;
+            $client->save();
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Error delete client to database.'], 400);
         }
     }
 }

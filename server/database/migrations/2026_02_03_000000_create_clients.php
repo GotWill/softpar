@@ -18,6 +18,7 @@ return new class extends Migration
             $table->boolean('warning_email')->nullable()->default(false);
             $table->boolean('warning_whatsapp')->nullable()->default(false);
             $table->longText('observation')->nullable();
+            $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });
     }

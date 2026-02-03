@@ -16,6 +16,7 @@ class Client extends Model
         'email',
         'warning_email',
         'warning_whatsapp',
-        'observation'
+        'observation',
+        'is_deleted'
     ];
 }
