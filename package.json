@@ -9,5 +9,8 @@
   "lint-staged": {
     "front/**/*.{js,ts,vue}": "npm --prefix front run lint",
     "server/**/*.php": "C:/MAMP/bin/php/php8.5.2/php.exe server/vendor/bin/pint"
+  },
+  "dependencies": {
+    "axios": "^1.13.4"
   }
 }

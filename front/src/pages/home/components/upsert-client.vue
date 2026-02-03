@@ -2,12 +2,12 @@
     <q-dialog v-model="dialogModel" persistent transition-show="scale" transition-hide="scale">
         <q-card style="width: 550px; max-width: 95vw;" class="rounded-xl shadow-2xl">
 
-            <q-form @submit.prevent="salvar">
+            <q-form @submit.prevent="upsertClient">
 
                 <q-card-section class="bg-primary text-white flex justify-between items-center py-4">
                     <div>
-                        <div class="text-h6 font-bold">Informações de Contato</div>
-                        <div class="text-caption opacity-80">Preencha os campos abaixo para o cadastro.</div>
+                        <div class="text-h6 font-bold">{{ modalTitle }}</div>
+                        <div class="text-caption opacity-80">{{ modalDescription }}</div>
                     </div>
                     <q-btn icon="close" flat round dense @click="closeModal" />
                 </q-card-section>
@@ -36,7 +36,7 @@
                                 </q-input>
                             </div>
                             <div class="col-12 col-sm-6">
-                                <q-input outlined v-model="form.phone" label="WhatsApp" mask="(##) #####-####"
+                                <q-input outlined v-model="form.whatsapp" label="WhatsApp" mask="(##) #####-####"
                                     bg-color="grey-1" lazy-rules
                                     :rules="[val => val && val.length > 0 || 'O telefone é obrigatório']">
                                     <template v-slot:prepend>
@@ -57,8 +57,8 @@
                                 <span>Preferências de Alerta</span>
                             </div>
                             <div class="flex flex-wrap gap-x-6 gap-y-2">
-                                <q-checkbox v-model="form.warningEmail" label="E-mail" color="primary" dense />
-                                <q-checkbox v-model="form.warningWhats" label="WhatsApp" color="green-7" dense />
+                                <q-checkbox v-model="form.warning_email" label="E-mail" color="primary" dense />
+                                <q-checkbox v-model="form.warning_whatsapp" label="WhatsApp" color="green-7" dense />
                             </div>
                         </div>
                     </div>
@@ -66,8 +66,9 @@
 
                 <q-card-actions align="right" class="q-pa-md bg-grey-1">
                     <q-btn flat label="Descartar" color="grey-7" class="px-4 rounded-lg" @click="closeModal" />
-                    <q-btn type="submit" unelevated label="Salvar Registro" color="primary"
+                    <q-btn type="submit" unelevated color="primary" :loading="isPending" :label="textButton"
                         class="px-6 rounded-lg font-bold" />
+
                 </q-card-actions>
 
             </q-form>
@@ -77,38 +78,53 @@
 
 
 <script setup lang="ts">
+import type { Client } from 'src/types/client';
 import { computed, reactive, watch } from 'vue'
+import { clientService } from 'src/services/client-service';
+import { useMutation, useQueryClient } from '@tanstack/vue-query';
+import { useQuasar } from 'quasar'
 
 const props = defineProps<{
-    user?: {
-        name: string;
-        email: string,
-        phone: string,
-        observation: string,
-        warningEmail: boolean,
-        warningWhats: boolean
-    } | null,
+    user?: Client | null,
     isOpen: boolean;
     closeModal: () => void
 }>()
 
-const emit = defineEmits(['update:is-open'])
+const emit = defineEmits(['update:is-open', 'saved'])
 
 const dialogModel = computed({
     get: () => props.isOpen,
     set: (value) => emit('update:is-open', value)
 })
 
-const initialFormState = {
+const initialFormState: Client = {
+    id: undefined,
     name: '',
     email: '',
-    phone: '',
+    whatsapp: '',
     observation: '',
-    warningEmail: false,
-    warningWhats: false
+    warning_email: false,
+    warning_whatsapp: false
 }
 
 const form = reactive({ ...initialFormState })
+
+
+const isEditing = computed(() => !!props.user?.id)
+
+const modalTitle = computed(() =>
+    isEditing.value ? `Editando ${props.user?.name}` : 'Informações de Contato'
+)
+
+const modalDescription = computed(() =>
+    isEditing.value ? 'Altere os dados abaixo para manter o cadastro atualizado.' : 'Preencha os campos abaixo para o cadastro.'
+)
+
+const textButton = computed(() => (
+    isEditing.value ? 'Atualizar' : 'Salvar Registro'
+))
+
+
 
 watch(() => props.user, (newUser) => {
     if (newUser) {
@@ -118,9 +134,35 @@ watch(() => props.user, (newUser) => {
     }
 }, { immediate: true })
 
+const queryClient = useQueryClient();
+const q = useQuasar()
 
-const salvar = () => {
-    console.log('Dados do formulário:', { ...form })
-    emit('update:is-open', false) 
+
+const { mutate, isPending } = useMutation({
+    mutationFn: async (data: Client) => {
+        if (data.id) {
+            await clientService.update(data.id, data)
+            return
+        }
+        await clientService.create_client(data)
+    }
+})
+
+function upsertClient() {
+    mutate(form, {
+        onSuccess: () => {
+            q.notify({
+                type: 'positive',
+                message: form.id ? 'Cliente atualizado' : 'Cliente cadastrado',
+                position: 'top'
+            })
+            void queryClient.invalidateQueries({ queryKey: ['clients'] });
+            props.closeModal()
+            emit('saved')
+        },
+        onError: (error) => {
+            console.log(error)
+        }
+    })
 }
 </script>

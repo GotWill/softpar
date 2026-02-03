@@ -18,7 +18,47 @@
         <h3 class="text-lg font-bold text-gray-900">Lista de Clientes</h3>
       </div>
 
-      <div v-if="!isUsersEmpty" class="flex flex-col items-center justify-center py-10">
+      <q-markup-table flat bordered class="rounded-xl shadow-sm" v-if="isLoading">
+        <thead>
+          <tr>
+            <th class="text-left" style="width: 30%">Nome</th>
+            <th class="text-left">E-mail</th>
+            <th class="text-left">Telefone</th>
+            <th class="text-left">Notificações</th>
+            <th class="text-right">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="n in 5" :key="n">
+            <td class="text-left">
+              <q-skeleton type="text" width="150px" class="q-my-sm" />
+            </td>
+            <td class="text-left">
+              <div class="row q-gutter-x-sm">
+                <q-skeleton type="text" width="150px" />
+              </div>
+            </td>
+            <td class="text-left">
+              <div class="row q-gutter-x-sm">
+                <q-skeleton type="text" width="150px" />
+              </div>
+            </td>
+            <td class="text-left">
+              <div class="row q-gutter-x-sm">
+                <q-skeleton type="text" width="150px" />
+              </div>
+            </td>
+            <td class="text-right">
+              <div class="row justify-end q-gutter-x-sm">
+                <q-skeleton type="QBtn" size="32px" />
+                <q-skeleton type="QBtn" size="32px" />
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </q-markup-table>
+
+      <div v-if="!isLoading && clients.length === 0" class="flex flex-col items-center justify-center py-10">
 
         <div class="text-gray-500 mb-4">
           <q-icon name="group" size="64px" class="opacity-80" />
@@ -36,52 +76,82 @@
       </div>
 
 
-      <q-table :rows="rows" :columns="columns" row-key="id" flat bordered class="rounded-xl shadow-sm" v-else>
+      <div v-if="!isLoading && clients">
+        <q-table :rows="clients" :columns="columns" row-key="id" flat bordered class="rounded-xl shadow-sm"
+          v-if="clients.length > 0">
 
-        <template v-slot:body-cell-notifications="props">
-          <q-td :props="props">
-            <div class="flex justify-start gap-2">
+          <template v-slot:body-cell-notifications="props">
+            <q-td :props="props">
+              <div class="flex justify-start gap-2">
 
-              <q-badge :color="props.row.warningEmail ? 'blue-1' : 'grey-2'"
-                :text-color="props.row.warningEmail ? 'blue-9' : 'grey-5'" class="q-pa-xs px-2 rounded-md text-base">
-                Email
-              </q-badge>
+                <q-badge :color="props.row.warning_email ? 'blue-1' : 'grey-2'"
+                  :text-color="props.row.warning_email ? 'blue-9' : 'grey-5'" class="q-pa-xs px-2 rounded-md text-base">
+                  Email
+                </q-badge>
 
-              <q-badge :color="props.row.warningWhats ? 'green-1' : 'grey-2'"
-                :text-color="props.row.warningWhats ? 'green-9' : 'grey-5'" class="q-pa-xs px-2 rounded-md text-base">
-                whatsapp
-              </q-badge>
+                <q-badge :color="props.row.warning_whatsapp ? 'green-1' : 'grey-2'"
+                  :text-color="props.row.warning_whatsapp ? 'green-9' : 'grey-5'"
+                  class="q-pa-xs px-2 rounded-md text-base">
+                  whatsapp
+                </q-badge>
 
-            </div>
-          </q-td>
-        </template>
-
-        <template v-slot:body-cell-actions="props">
-          <q-td :props="props">
-            <div class="flex justify-end gap-2">
-
-              <div class="border rounded-md hover:bg-blue-50">
-                <q-btn flat dense icon="edit" @click="handleEdit(props.row)">
-                  <q-tooltip>Editar registro</q-tooltip>
-                </q-btn>
               </div>
+            </q-td>
+          </template>
 
-              <div class="border rounded-md hover:bg-red-50">
-                <q-btn flat dense icon="delete">
-                  <q-tooltip>Excluir registro</q-tooltip>
-                </q-btn>
+          <template v-slot:body-cell-actions="props">
+            <q-td :props="props">
+              <div class="flex justify-end gap-2">
+
+                <div class="border rounded-md hover:bg-blue-50">
+                  <q-btn flat dense icon="edit" @click="handleEdit(props.row)">
+                    <q-tooltip>Editar registro</q-tooltip>
+                  </q-btn>
+                </div>
+
+                <div class="border rounded-md hover:bg-red-50">
+                  <q-btn flat dense icon="delete" @click="confirmDialog = true">
+                    <q-tooltip>Excluir registro</q-tooltip>
+                  </q-btn>
+                  <q-dialog v-model="confirmDialog" persistent>
+                    <q-card class="rounded-xl shadow-2xl" style="width: 400px; max-width: 90vw;">
+
+                      <q-card-section class="row items-center q-pb-none">
+                        <div class="text-h6 font-bold text-negative flex items-center gap-2">
+                          <q-icon name="warning" size="28px" />
+                          Confirmar Exclusão
+                        </div>
+                        <q-space />
+                        <q-btn icon="close" flat round dense v-close-popup />
+                      </q-card-section>
+
+                      <q-card-section class="q-pt-md text-grey-8">
+                        Você tem certeza que deseja remover este registro?
+                        <div class="bg-red-50 p-3 rounded-lg mt-2 text-xs border border-red-100">
+                          <strong>Atenção:</strong> Esta ação é permanente e não poderá ser desfeita.
+                        </div>
+                      </q-card-section>
+
+                      <q-card-actions align="right" class="q-pa-md bg-grey-1">
+                        <q-btn flat label="Cancelar" color="grey-7" class="px-4" v-close-popup />
+                        <q-btn unelevated label="Sim, Remover" color="negative" class="px-6 rounded-lg font-bold"
+                          @click="handleDelete(props.row.id)" :loading="isPending" />
+                      </q-card-actions>
+                    </q-card>
+                  </q-dialog>
+                </div>
+
               </div>
+            </q-td>
+          </template>
 
-            </div>
-          </q-td>
-        </template>
-
-        <template v-slot:body-cell-name="props">
-          <q-td :props="props">
-            <div class="font-bold text-primary">{{ props.value }}</div>
-          </q-td>
-        </template>
-      </q-table>
+          <template v-slot:body-cell-name="props">
+            <q-td :props="props">
+              <div class="font-bold text-primary">{{ props.value }}</div>
+            </q-td>
+          </template>
+        </q-table>
+      </div>
 
       <UpsertClient v-model:is-open="alert" :user="selectedUser" :close-modal="closeModal" />
     </div>
@@ -89,14 +159,25 @@
 </template>
 
 <script setup lang="ts">
+import type { Client } from 'src/types/client';
 import { ref } from 'vue'
-import type { User } from 'src/types/user';
 import UpsertClient from './components/upsert-client.vue';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+import { clientService } from 'src/services/client-service';
 
 const alert = ref(false)
-const selectedUser = ref<User | null>(null)
+const selectedUser = ref<Client | null>(null)
 
-const handleEdit = (user: User) => {
+const confirmDialog = ref(false)
+
+
+const { data: clients, isLoading } = useQuery({
+  queryKey: ['clients'],
+  queryFn: () => clientService.users(),
+});
+
+
+const handleEdit = (user: Client) => {
   selectedUser.value = { ...user }
   alert.value = true
 }
@@ -111,37 +192,35 @@ function closeModal() {
   alert.value = false
 }
 
-const isUsersEmpty = true
-
-const rows = ref([
-  {
-    id: 1,
-    name: 'ola',
-    email: 'teste',
-    phone: '11965239222',
-    observation: 'oi, tudo bem?',
-    warningEmail: true,
-    warningWhats: true
-  },
-  {
-    id: 2,
-    name: 'ola',
-    email: 'teste',
-    phone: '119620905559',
-    observation: 'eeeeee',
-    warningEmail: false,
-    warningWhats: true
-
-
-  }
-])
-
 const columns = [
   { id: 1, name: 'name', label: 'Nome', field: 'name', align: 'left' as const },
   { id: 2, name: 'email', label: 'E-mail', field: 'email', align: 'left' as const },
-  { id: 3, name: 'phone', label: 'Telefone', field: 'phone', align: 'left' as const },
+  { id: 3, name: 'whatsapp', label: 'Telefone', field: 'whatsapp', align: 'left' as const },
   { id: 4, name: 'notifications', label: 'Notificações', field: 'id', align: 'left' as const },
   { id: 5, name: 'actions', label: 'Ações', field: 'actions', align: 'right' as const }
 ]
+
+const queryClient = useQueryClient();
+
+const { mutate, isPending } = useMutation({
+  mutationFn: async (id: number) => {
+    await clientService.delete(id)
+  }
+})
+
+function handleDelete(id: number) {
+
+  mutate(id, {
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['clients'] });
+      confirmDialog.value = false
+    },
+
+    onError: () => {
+      console.log("d")
+    }
+  })
+}
+
 
 </script>
