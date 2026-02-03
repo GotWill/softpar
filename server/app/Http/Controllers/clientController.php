@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCLientRequest;
 use App\Http\Requests\UpdateCLientRequest;
 use App\Models\Client;
-use Illuminate\Http\Request;
-use PhpParser\Node\Stmt\TryCatch;
+use Exception;
 
 class ClientController extends Controller
 {
@@ -15,12 +14,10 @@ class ClientController extends Controller
      */
     public function index()
     {
-        return Client::all();
+         $user = Client::all();
+         return response()->json($user->toResourceCollection());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreCLientRequest $request)
     {
         $data = $request->validated();
@@ -34,17 +31,6 @@ class ClientController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateCLientRequest $request, string $id)
     {
         $data = $request->validated();
@@ -57,11 +43,16 @@ class ClientController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        //
+        try {
+           $isRemoved = Client::destroy($id);
+
+           if(!$isRemoved){
+            throw new Exception();
+           }
+        } catch (\Exception $th) {
+            return response()->json(['message' => 'Error delete user to database.'], 400);
+        }
     }
 }
