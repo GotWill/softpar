@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->boolean('warning_email')->nullable();
-            $table->boolean('warning_whatsapp')->nullable();
+            $table->boolean('warning_email')->nullable()->default(false);
+            $table->boolean('warning_whatsapp')->nullable()->default(false);
             $table->longText('observation')->nullable();
             $table->timestamps();
         });
