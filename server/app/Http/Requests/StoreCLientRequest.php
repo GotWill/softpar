@@ -24,6 +24,7 @@ class StoreCLientRequest extends FormRequest
         return [
             "name" => "required",
             "email" => "required|email|unique:clients,email",
+            'whatsapp' => "required",
             "warning_email" => "nullable|boolean",
             "warning_whatsapp" => "nullable|boolean",
             "observation" => "nullable|string",

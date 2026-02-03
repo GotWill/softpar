@@ -25,6 +25,7 @@ class UpdateCLientRequest extends FormRequest
         return [
             "name" => "required",
             "email" => "required|email|unique:clients,email,{$clientId}",
+            'whatsapp' => "nullable|string",
             "warning_email" => "nullable|boolean",
             "warning_whatsapp" => "nullable|boolean",
             "observation" => "nullable|string",
