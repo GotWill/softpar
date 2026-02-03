@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('time_spent')->default(0);
             $table->string('status')->default('Backlog');
             $table->boolean('return')->default(false);
+            $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });
     }
