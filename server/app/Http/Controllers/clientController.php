@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCLientRequest;
+use App\Http\Requests\UpdateCLientRequest;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\TryCatch;
@@ -14,7 +15,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        
+        return Client::all();
     }
 
     /**
@@ -29,7 +30,7 @@ class ClientController extends Controller
             $client->fill($data);
             $client->save();
         } catch (\Exception $th) {
-            return response()->json(['message' => 'falha ao salvar'], 400);
+            return response()->json(['message' => 'Error saving to database.'], 400);
         }
     }
 
@@ -44,9 +45,16 @@ class ClientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateCLientRequest $request, string $id)
     {
-        //
+        $data = $request->validated();
+
+        try {
+            $client = Client::findOrFail($id);
+            $client->update($data);
+        } catch (\Exception $th) {
+            return response()->json(['message' => 'Error update to database.'], 400);
+        }
     }
 
     /**
