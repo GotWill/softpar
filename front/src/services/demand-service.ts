@@ -20,4 +20,10 @@ export const demandService = {
   delete: async (id: number) => {
     return await api.delete(`/demands/${id}`);
   },
+
+  updateStatus: async (id: number, status: string) => {
+    return await api.patch(`/demands/${id}/status`, {
+      status,
+    });
+  },
 };

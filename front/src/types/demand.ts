@@ -11,6 +11,7 @@ export type Status =
 export type Demand = {
   id: number;
   client_id: null | number;
+  client_name?: string;
   title: string;
   priority: Prority;
   sector: string;
@@ -39,4 +40,3 @@ export type UpsertDemand = RequiredFields & {
   status?: Status;
   return?: boolean;
 };
-
