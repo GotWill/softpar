@@ -11,9 +11,13 @@ class DemandController extends Controller
 {
     public function index()
     {
-        $demand = Demand::where('is_deleted', false)->get();
+        $demands = Demand::where('is_deleted', false)
+            ->whereHas('client', function ($query) {
+                $query->where('is_deleted', false);
+            })
+            ->get();
 
-        return response(DemandResource::collection($demand->values()),200);
+        return response(DemandResource::collection($demands), 200);
     }
     public function store(StoreDemandRequest $request)
 
