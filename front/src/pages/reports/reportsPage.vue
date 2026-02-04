@@ -5,7 +5,15 @@
             <p class="text-gray-500">Visualize o desempenho e demandas por cliente</p>
         </div>
 
-        <div class="flex flex-wrap items-start gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+        <div v-if="!demands && !isPendingGetReports && !clients?.length"
+            class="flex items-center bg-blue-50 text-blue-700 p-3 rounded-lg border border-blue-100">
+            <q-icon name="info" size="sm" class="q-mr-sm" />
+            <span>Para gerar relatórios, você precisa primeiro cadastrar um cliente.</span>
+            <q-btn flat label="Ir para Clientes" to="/" class="q-ml-md" color="primary" />
+        </div>
+
+        <div v-else-if="clients"
+            class="flex flex-wrap items-start gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
             <q-select outlined v-model="form.client_id" :options="clients || []" option-label="name" option-value="id"
                 emit-value map-options label="Selecione o Cliente" dense bg-color="grey-1" class="w-full md:w-80"
                 :loading="isPending" lazy-rules
@@ -21,7 +29,7 @@
             </q-btn>
         </div>
 
-        <SkeletronReport v-if="isPendigGetReports"/>
+        <SkeletronReport v-if="isPendingGetReports" />
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" v-if="demands">
             <q-card flat class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
@@ -108,7 +116,7 @@ const form = reactive({ ...initialFormState })
 
 const demands = ref<Demand[]>()
 
-const { mutate, data, isPending: isPendigGetReports } = useMutation({
+const { mutate, data, isPending: isPendingGetReports } = useMutation({
     mutationFn: async (data: { client_id: number, month: string }) => {
         const response = await reportService.get(data)
         return response as Demand[]
@@ -174,14 +182,4 @@ const handleDateSelection = () => {
         dateProxy.value.hide();
     }
 };
-
-
-
-
 </script>
-
-<style scoped>
-F .q-table__card {
-    box-shadow: none;
-}
-</style>
