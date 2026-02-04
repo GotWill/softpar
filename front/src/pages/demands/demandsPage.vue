@@ -34,7 +34,7 @@
                 </h3>
             </div>
 
-            <div v-if="demands?.values.length === 0" class="flex flex-col items-center justify-center py-10">
+            <div v-if="demands?.length === 0" class="flex flex-col items-center justify-center py-10">
 
                 <div class="text-gray-500 mb-4">
                     <q-icon name="content_paste" size="64px" class="opacity-80" />
