@@ -22,6 +22,7 @@ class UpdateDemandRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'client_id' => 'required',
             'title' => 'nullable|string',
             'priority' => 'nullable|string',
             'sector' => 'nullable|string',

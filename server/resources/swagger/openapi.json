@@ -1,0 +1,375 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Sistema de Gestão de Demandas",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/clients": {
+            "get": {
+                "tags": ["Clients"],
+                "summary": "Obter todos os clientes",
+                "responses": {
+                    "200": {
+                        "description": "Lista de clientes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Client"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Clients"],
+                "summary": "Criar novo cliente",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/Client" }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": { "description": "Cliente criado" }
+                }
+            }
+        },
+        "/api/clients/{id}": {
+            "patch": {
+                "tags": ["Clients"],
+                "summary": "Atualizar cliente",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ClientUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": { "description": "Cliente atualizado" }
+                }
+            },
+            "delete": {
+                "tags": ["Clients"],
+                "summary": "Excluir cliente",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "204": { "description": "Cliente excluído" }
+                }
+            }
+        },
+        "/api/demands": {
+            "tags": ["Clients"],
+            "get": {
+                "tags": ["Demands"],
+                "summary": "Listar todas as demandas",
+                "responses": {
+                    "200": {
+                        "description": "Lista de demandas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Demand"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Demands"],
+                "summary": "Criar nova demanda",
+                "responses": {
+                    "201": { "description": "Demanda criada" }
+                },
+                "required": true,
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/CreateDemand" }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/demands/{id}": {
+            "patch": {
+                "tags": ["Demands"],
+                "summary": "Atualizar demanda",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/DemandUpdate" }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": { "description": "Demanda ataualizada" }
+                }
+            },
+            "delete": {
+                "tags": ["Demands"],
+                "summary": "Remover demanda (Soft Delete)",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "204": { "description": "Demanda excluída" }
+                }
+            }
+        },
+        "/api/reports/client/{id}": {
+            "get": {
+                "tags": ["Reports"],
+                "summary": "buscar relatorio",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID do cliente",
+                        "schema": { "type": "integer", "example": 1 }
+                    },
+                    {
+                        "name": "month",
+                        "in": "query",
+                        "required": true,
+                        "description": "(Formato: YYYY-MM)",
+                        "schema": { "type": "string", "example": "2026-02" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Relatório gerado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Demand"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Client": {
+                "type": "object",
+                "required": ["name", "email", "whatsapp"],
+                "properties": {
+                    "name": { "type": "string", "example": "João Silva" },
+                    "email": {
+                        "type": "string",
+                        "example": "joao@empresa.com"
+                    },
+                    "whatsapp": {
+                        "type": "string",
+                        "example": "(11) 99999-9999"
+                    },
+                    "warning_email": { "type": "boolean", "example": true },
+                    "warning_whatsapp": { "type": "boolean", "example": false },
+                    "observation": {
+                        "type": "string",
+                        "example": "Cliente prefere contato após às 14h"
+                    }
+                }
+            },
+            "ClientUpdate": {
+                "type": "object",
+                "description": "Campos opcionais para atualização",
+                "required": ["email"],
+                "properties": {
+                    "name": { "type": "string" },
+                    "email": { "type": "string" },
+                    "whatsapp": { "type": "string" },
+                    "warning_email": { "type": "boolean" },
+                    "warning_whatsapp": { "type": "boolean" },
+                    "observation": { "type": "string" }
+                }
+            },
+            "Demand": {
+                "type": "object",
+                "required": [
+                    "client_id",
+                    "title",
+                    "priority",
+                    "sector",
+                    "responsible"
+                ],
+                "properties": {
+                    "id": { "type": "integer", "example": 1 },
+                    "client_id": {
+                        "type": "integer",
+                        "example": 5,
+                        "description": "ID do cliente vinculado"
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Ajustar layout do dashboard"
+                    },
+                    "priority": {
+                        "type": "string",
+                        "example": "Alta",
+                        "enum": ["Baixa", "Média", "Alta", "Urgente"]
+                    },
+                    "sector": {
+                        "type": "string",
+                        "example": "Desenvolvimento"
+                    },
+                    "responsible": {
+                        "type": "string",
+                        "example": "Lucas Silva"
+                    },
+                    "who_should_test": {
+                        "type": "string",
+                        "example": "Ana Quality"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "O botão de salvar não está alinhado no mobile."
+                    },
+                    "midia": {
+                        "type": "string",
+                        "example": "https://link-da-imagem.com/print.png"
+                    },
+                    "customer_charged": { "type": "boolean", "example": false },
+                    "estimated_time": {
+                        "type": "integer",
+                        "example": 120,
+                        "description": "Tempo em minutos"
+                    },
+                    "time_spent": { "type": "integer", "example": 0 },
+                    "status": {
+                        "type": "string",
+                        "example": "Backlog",
+                        "default": "Backlog"
+                    },
+                    "return": { "type": "boolean", "example": false }
+                }
+            },
+            "CreateDemand": {
+                "type": "object",
+                "required": [
+                    "client_id",
+                    "title",
+                    "priority",
+                    "sector",
+                    "responsible"
+                ],
+                "properties": {
+                    "client_id": {
+                        "type": "integer",
+                        "example": 5,
+                        "description": "ID do cliente vinculado"
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Ajustar layout do dashboard"
+                    },
+                    "priority": {
+                        "type": "string",
+                        "example": "Alta",
+                        "enum": ["Baixa", "Média", "Alta", "Urgente"]
+                    },
+                    "sector": {
+                        "type": "string",
+                        "example": "Desenvolvimento"
+                    },
+                    "responsible": {
+                        "type": "string",
+                        "example": "Lucas Silva"
+                    },
+                    "who_should_test": {
+                        "type": "string",
+                        "example": "Ana Quality"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "O botão de salvar não está alinhado no mobile."
+                    },
+                    "midia": {
+                        "type": "string",
+                        "example": "https://link-da-imagem.com/print.png"
+                    },
+                    "customer_charged": { "type": "boolean", "example": false },
+                    "estimated_time": {
+                        "type": "integer",
+                        "example": 120,
+                        "description": "Tempo em minutos"
+                    },
+                    "time_spent": { "type": "integer", "example": 0 },
+                    "status": {
+                        "type": "string",
+                        "example": "Backlog",
+                        "default": "Backlog"
+                    },
+                    "return": { "type": "boolean", "example": false }
+                }
+            },
+            "DemandUpdate": {
+                "type": "object",
+                "description": "Campos para atualização parcial",
+                "required": ["client_id"],
+                "properties": {
+                    "client_id": { "type": "integer" },
+                    "title": { "type": "string" },
+                    "priority": { "type": "string" },
+                    "sector": { "type": "string" },
+                    "responsible": { "type": "string" },
+                    "who_should_test": { "type": "string" },
+                    "description": { "type": "string" },
+                    "midia": { "type": "string" },
+                    "customer_charged": { "type": "boolean" },
+                    "estimated_time": { "type": "integer" },
+                    "time_spent": { "type": "integer" },
+                    "status": { "type": "string" },
+                    "return": { "type": "boolean" }
+                }
+            }
+        }
+    }
+}
