@@ -15,7 +15,7 @@
         <div class="flex justify-between items-center" v-else>
             <div>
                 <h2 class="text-h4 font-bold text-gray-800">Demandas</h2>
-                <p class="text-xl">Gerencie todas as demandas e solicitações
+                <p class="text-gray-500">Gerencie todas as demandas e solicitações
                 </p>
             </div>
 

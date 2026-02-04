@@ -3,7 +3,7 @@
     <div class="flex justify-between items-center">
       <div>
         <h2 class="text-h4 font-bold text-gray-800">Clientes</h2>
-        <p class="text-xl">Gerencie seus clientes e informações de contato
+        <p class="text-gray-500">Gerencie seus clientes e informações de contato
         </p>
       </div>
       <q-btn icon="person_add" padding="10px 15px" class="rounded-md" label="Novo cliente" color="primary"

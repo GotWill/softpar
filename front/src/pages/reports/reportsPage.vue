@@ -2,7 +2,7 @@
     <div class="flex flex-col gap-8">
         <div>
             <h2 class="text-3xl font-bold text-gray-800">Relatórios Mensais</h2>
-            <p class="text-gray-500 text-lg">Visualize o desempenho e demandas por cliente</p>
+            <p class="text-gray-500">Visualize o desempenho e demandas por cliente</p>
         </div>
 
         <div class="flex flex-wrap items-start gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
