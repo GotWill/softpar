@@ -8,7 +8,7 @@
                         <div class="text-h6 font-bold">Gerenciar Tarefa</div>
                         <div class="text-caption opacity-80">Preencha os detalhes do ticket.</div>
                     </div>
-                    <q-btn icon="close" flat round dense @click="close" :disable="!clients" />
+                    <q-btn icon="close" flat round dense @click="close" />
                 </q-card-section>
 
                 <q-card-section class="q-pa-lg">
@@ -90,25 +90,17 @@
 import { useMutation, useQueryClient } from "@tanstack/vue-query"
 import { demandService } from "src/services/demand-service"
 import type { UpsertDemand, Demand } from "src/types/demand"
-import { useQuery } from "@tanstack/vue-query"
-import { clientService } from "src/services/client-service"
 import type { Client } from "src/types/client"
 import { computed, reactive, watch } from "vue"
 import { useQuasar } from 'quasar'
 
 const props = defineProps<{
+    clients?: Client[];
+    isPending?: boolean
     isOpen: boolean,
     close: () => void,
     demand?: Demand | null;
 }>()
-
-const { data: clients, isPending } = useQuery({
-    queryKey: ['clients'],
-    queryFn: async () => {
-        const data = await clientService.clients()
-        return data as Client[]
-    },
-})
 
 
 const initialFormState: UpsertDemand = reactive({

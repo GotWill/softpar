@@ -185,8 +185,8 @@ const confirmDialog = ref(false)
 
 
 const { isLoading } = defineProps<{
-    demands: Demand[]
-    isLoading: boolean
+    demands: Demand[]  
+    isLoading: boolean;
 }>()
 
 function handleEdit(demand: Demand) {
