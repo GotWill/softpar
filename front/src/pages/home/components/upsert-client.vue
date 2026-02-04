@@ -83,6 +83,7 @@ import { computed, reactive, watch } from 'vue'
 import { clientService } from 'src/services/client-service';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { useQuasar } from 'quasar'
+import axios, { type AxiosError } from 'axios';
 
 const props = defineProps<{
     user?: Client | null,
@@ -148,6 +149,11 @@ const { mutate, isPending } = useMutation({
     }
 })
 
+interface ApiErrorResponse {
+    message: string;
+    errors?: Record<string, string[]>;
+}
+
 function upsertClient() {
     mutate(form, {
         onSuccess: () => {
@@ -161,7 +167,13 @@ function upsertClient() {
             emit('saved')
         },
         onError: (error) => {
-            console.log(error)
+            if (axios.isAxiosError(error)) {
+                const serverError = error as AxiosError<ApiErrorResponse>;
+                const message = serverError.response?.data?.message === 'The email has already been taken.' ? 'E-mail já registrado.' : 'Erro ao processar a requisição'
+                q.notify({ type: 'negative', message, position: 'top' });
+            } else {
+                q.notify({ type: 'negative', message: 'Erro desconhecido' });
+            }
         }
     })
 }
