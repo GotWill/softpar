@@ -156,7 +156,8 @@
 
         <template v-slot:body-cell-return="props">
             <q-td :props="props">
-                <q-badge class="q-pa-sm" :color="props.value ? 'red-12' : 'green-12'" :label="props.value ? 'Sim' : 'Não'"/> 
+                <q-badge class="q-pa-sm" :color="props.value ? 'red-12' : 'green-12'"
+                    :label="props.value ? 'Sim' : 'Não'" />
             </q-td>
         </template>
 
@@ -172,7 +173,7 @@
 
 
 <script setup lang="ts">
-import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
+import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { demandService } from 'src/services/demand-service';
 import type { Demand, Prority, Status } from 'src/types/demand';
 import upsertDemand from './upsert-demand.vue';
@@ -182,14 +183,11 @@ const isOpen = ref(false)
 const selectedDemand = ref<Demand | null>(null)
 const confirmDialog = ref(false)
 
-const { data: demands, isLoading } = useQuery({
-    queryKey: ['demands'],
-    queryFn: async () => {
-        const data = await demandService.demands();
-        return data;
-    }
 
-})
+const { isLoading } = defineProps<{
+    demands: Demand[]
+    isLoading: boolean
+}>()
 
 function handleEdit(demand: Demand) {
     selectedDemand.value = demand

@@ -17,7 +17,7 @@
                 </h3>
             </div>
 
-            <div v-if="!isDemands" class="flex flex-col items-center justify-center py-10">
+            <div v-if="isDemands.valueOf.length === 0" class="flex flex-col items-center justify-center py-10">
 
                 <div class="text-gray-500 mb-4">
                     <q-icon name="content_paste" size="64px" class="opacity-80" />
@@ -31,10 +31,9 @@
                         Clique em "Nova Demanda" para começar.
                     </p>
                 </div>
-
             </div>
 
-            <listDemand v-else />
+            <listDemand :demands="demands" :is-loading="isLoading" v-else />
         </div>
     </div>
 </template>
@@ -43,12 +42,23 @@
 import { ref } from 'vue';
 import upsertDemand from './components/upsert-demand.vue';
 import listDemand from './components/list-demand.vue';
+import { useQuery } from '@tanstack/vue-query';
+import { demandService } from 'src/services/demand-service';
 
 const openDialog = ref(false)
 
 function closeModal() {
     openDialog.value = false
 }
+
+const { data: demands, isLoading } = useQuery({
+    queryKey: ['demands'],
+    queryFn: async () => {
+        const data = await demandService.demands();
+        return data;
+    }
+
+})
 
 const isDemands = true
 </script>
