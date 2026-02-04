@@ -113,29 +113,29 @@
                   <q-btn flat dense icon="delete" @click="confirmDialog = true">
                     <q-tooltip>Excluir registro</q-tooltip>
                   </q-btn>
-                  <q-dialog v-model="confirmDialog" persistent>
-                    <q-card class="rounded-xl shadow-2xl" style="width: 400px; max-width: 90vw;">
+                  <q-dialog v-model="confirmDialog" persistent backdrop-filter="blur(4px)">
+                    <q-card class="q-pa-sm" style="width: 450px; border-radius: 24px;">
 
-                      <q-card-section class="row items-center q-pb-none">
-                        <div class="text-h6 font-bold text-negative flex items-center gap-2">
-                          <q-icon name="warning" size="28px" />
-                          Confirmar Exclusão
+                      <q-card-section class="column items-center q-pt-xl">
+                        <div class="bg-red-1 q-pa-lg rounded-circle flex flex-center"
+                          style="width: 80px; height: 80px; border-radius: 50%">
+                          <q-icon name="delete_sweep" color="negative" size="42px" />
                         </div>
-                        <q-space />
-                        <q-btn icon="close" flat round dense v-close-popup />
-                      </q-card-section>
 
-                      <q-card-section class="q-pt-md text-grey-8">
-                        Você tem certeza que deseja remover este registro?
-                        <div class="bg-red-50 p-3 rounded-lg mt-2 text-xs border border-red-100">
-                          <strong>Atenção:</strong> Esta ação é permanente e não poderá ser desfeita.
+                        <div class="text-h5 text-weight-bold q-mt-lg text-dark">Excluir registro?</div>
+                        <div class="text-body1 text-grey-7 text-center q-mt-sm q-px-md">
+                          Você está prestes a remover este item. Esta ação <span
+                            class="text-weight-bold text-negative">não pode ser desfeita</span>.
                         </div>
                       </q-card-section>
 
-                      <q-card-actions align="right" class="q-pa-md bg-grey-1">
-                        <q-btn flat label="Cancelar" color="grey-7" class="px-4" v-close-popup />
-                        <q-btn unelevated label="Sim, Remover" color="negative" class="px-6 rounded-lg font-bold"
-                          @click="handleDelete(props.row.id)" :loading="isPending" />
+                      <q-card-actions align="center" class="q-pb-xl q-pt-lg q-px-xl">
+                        <q-btn flat label="Não, manter" color="grey-9" class="text-weight-bold q-px-md flex-grow-1"
+                          v-close-popup no-caps style="min-width: 140px" />
+                        <q-btn unelevated label="Sim, excluir" color="negative"
+                          class="q-px-lg rounded-borders text-weight-bold shadow-2 flex-grow-1" no-caps
+                          @click="handleDelete(props.row.id)" :loading="isPending"
+                          style="min-width: 140px; border-radius: 12px;" />
                       </q-card-actions>
                     </q-card>
                   </q-dialog>
@@ -173,7 +173,7 @@ const confirmDialog = ref(false)
 
 const { data: clients, isLoading } = useQuery({
   queryKey: ['clients'],
-  queryFn: () => clientService.users(),
+  queryFn: async () => await clientService.clients(),
 });
 
 
