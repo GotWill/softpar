@@ -292,7 +292,7 @@ function handleDelete(id: number) {
         },
 
         onError: () => {
-            console.log("d")
+            console.log("")
         }
     })
 }
