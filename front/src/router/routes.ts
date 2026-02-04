@@ -1,7 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router';
 import LayoutMain from '../layouts/MainLayout.vue';
 import Home from 'pages/home/indexPage.vue';
-import Taks from 'pages/tasks/demandsPage.vue';
+import Taks from 'pages/demands/demandsPage.vue';
 import Reports from 'pages/reports/reportsPage.vue';
 import kanbanPage from 'src/pages/kanban/kanbanPage.vue';
 

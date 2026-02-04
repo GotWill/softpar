@@ -290,10 +290,6 @@ function handleDelete(id: number) {
             void queryClient.invalidateQueries({ queryKey: ['demands'] });
             confirmDialog.value = false
         },
-
-        onError: () => {
-            console.log("")
-        }
     })
 }
 
