@@ -1,0 +1,20 @@
+services:
+  frontend:
+    container_name: front-vue
+    image: front-vue:v1
+    build: ./front
+    ports:
+      - 8080:8080
+  backend:
+    container_name: server
+    image: laravel:v1
+    build: ./server
+    restart: unless-stopped
+    volumes:
+      - ./server:/var/www  
+    working_dir: /var/www
+    ports:
+      - "8000:8000"
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
