@@ -114,7 +114,9 @@
                     "required": true,
                     "content": {
                         "application/json": {
-                            "schema": { "$ref": "#/components/schemas/CreateDemand" }
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateDemand"
+                            }
                         }
                     }
                 }
@@ -136,7 +138,9 @@
                     "required": true,
                     "content": {
                         "application/json": {
-                            "schema": { "$ref": "#/components/schemas/DemandUpdate" }
+                            "schema": {
+                                "$ref": "#/components/schemas/DemandUpdate"
+                            }
                         }
                     }
                 },
@@ -155,6 +159,33 @@
                         "schema": { "type": "integer" }
                     }
                 ],
+                "responses": {
+                    "204": { "description": "Demanda excluída" }
+                }
+            }
+        },
+        "/api/demands/{id}/status": {
+            "patch": {
+                "tags": ["Demands"],
+                "summary": "Atualizar status da demanda",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DemandStatusUpdate"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "204": { "description": "Demanda excluída" }
                 }
@@ -356,18 +387,56 @@
                 "required": ["client_id"],
                 "properties": {
                     "client_id": { "type": "integer" },
-                    "title": { "type": "string" },
-                    "priority": { "type": "string" },
-                    "sector": { "type": "string" },
-                    "responsible": { "type": "string" },
-                    "who_should_test": { "type": "string" },
-                    "description": { "type": "string" },
-                    "midia": { "type": "string" },
-                    "customer_charged": { "type": "boolean" },
-                    "estimated_time": { "type": "integer" },
-                    "time_spent": { "type": "integer" },
-                    "status": { "type": "string" },
-                    "return": { "type": "boolean" }
+                    "title": {
+                        "type": "string",
+                        "example": "Ajustar layout do dashboard"
+                    },
+                    "priority": {
+                        "type": "string",
+                        "example": "Alta",
+                        "enum": ["Baixa", "Média", "Alta", "Urgente"]
+                    },
+                    "sector": {
+                        "type": "string",
+                        "example": "Desenvolvimento"
+                    },
+                    "responsible": {
+                        "type": "string",
+                        "example": "Lucas Silva"
+                    },
+                    "who_should_test": {
+                        "type": "string",
+                        "example": "Ana Quality"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "O botão de salvar não está alinhado no mobile."
+                    },
+                    "midia": {
+                        "type": "string",
+                        "example": "https://link-da-imagem.com/print.png"
+                    },
+                    "customer_charged": { "type": "boolean", "example": false },
+                    "estimated_time": {
+                        "type": "integer",
+                        "example": 120,
+                        "description": "Tempo em minutos"
+                    },
+                    "time_spent": { "type": "integer", "example": 0 },
+                    "status": {
+                        "type": "string",
+                        "example": "Backlog",
+                        "default": "Backlog"
+                    },
+                    "return": { "type": "boolean", "example": false }
+                }
+            },
+            "DemandStatusUpdate": {
+                "type": "object",
+                "description": "Campos para atualização parcial",
+                "required": ["status"],
+                "properties": {
+                    "status": { "type": "string", "example": "Fila" }
                 }
             }
         }
