@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDemandRequest;
 use App\Http\Requests\UpdateDemandRequest;
+use App\Http\Requests\UpdateDemandStatusRequest;
 use App\Http\Resources\DemandResource;
 use App\Models\Demand;
 
@@ -46,7 +47,7 @@ class DemandController extends Controller
         }
     }
 
-    public function updateStatus(UpdateDemandRequest $request, string $id)
+    public function updateStatus(UpdateDemandStatusRequest $request, string $id)
     {
         $data = $request->validated();
 
